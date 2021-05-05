@@ -1,4 +1,5 @@
-require "bundler/setup"
+# frozen_string_literal: true
+
 require "action_sprout/elastic_search"
 
 RSpec.configure do |config|

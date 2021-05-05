@@ -1,4 +1,6 @@
-require "action_sprout/elastic_search/version"
+# frozen_string_literal: true
+
+require_relative "elastic_search/version"
 
 module ActionSprout
   module ElasticSearch

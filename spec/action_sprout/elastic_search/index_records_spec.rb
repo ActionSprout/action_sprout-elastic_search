@@ -99,7 +99,7 @@ RSpec.describe ActionSprout::ElasticSearch::IndexRecords, ".call" do
 
     described_class.call records: records
 
-    result = client.get index: "examples_test", type: "doc", parent: "2", id: "1"
+    result = client.get index: "examples_test", type: "doc", routing: "2", id: "1"
 
     expect(result["_source"]["join_field"]).to eq "parent" => "2", "name" => "the_child"
     expect(result["_source"]["name"]).to eq "OMG HAI"

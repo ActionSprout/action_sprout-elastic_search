@@ -7,8 +7,7 @@ module ActionSprout
         if defined?(Rails)
           Rails.cache
         else
-          require "action_sprout/elastic_search/in_memory_cache"
-          InMemoryCache.instance
+          ActiveSupport::Cache::MemoryStore.new
         end
       end
 

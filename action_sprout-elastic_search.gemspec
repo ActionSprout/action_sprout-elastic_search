@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   spec.add_dependency "activesupport", "> 0"
   spec.add_dependency "action_sprout-method_object", "> 0"
-  spec.add_dependency "elasticsearch", "> 0"
+  spec.add_dependency "elasticsearch", "~> 6"
   spec.add_dependency "addressable", "~> 2.6"
   spec.add_dependency "net-http-persistent", "~> 4.0"
 

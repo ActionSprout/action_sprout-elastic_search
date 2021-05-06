@@ -32,7 +32,7 @@ RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, ".call" do
   end
 
   before do
-    Rails.cache.delete cache_key
+    cache_service.delete cache_key
   end
 
   after do

@@ -7,11 +7,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.0.1
+
+    - uses: miyataka/elasticsearch-github-actions@1
+      with:
+        stack-version: '6.6.2'
+
     - name: Run the default task
+      env:
+        APP_ENV: test
+        ELASTICSEARCH_URL: localhost:9200
       run: |
         gem install bundler -v 2.2.15
         bundle install

@@ -5,7 +5,7 @@ module ActionSprout
         if defined?(Rails)
           Rails.root.join("config/indices")
         else
-          Pathname.new("indices")
+          Pathname.new(".")
         end
       end
 
@@ -17,7 +17,7 @@ module ActionSprout
       end
 
       def options_for_index(index_name)
-        YAML.safe_load(ERB.new(config_path.join("#{index_name}.yml").read).result(binding)) || {}
+        YAML.safe_load(ERB.new(config_path.join("#{index_name}.yml").read).result(binding), [Symbol]) || {}
       end
 
       private

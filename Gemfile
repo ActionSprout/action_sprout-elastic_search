@@ -10,3 +10,8 @@ gem "rake", "~> 13.0"
 gem "rspec", "~> 3.0"
 
 gem "standard"
+
+# For testing LoadIndexOptions
+
+gem "yaml"
+gem "erb"

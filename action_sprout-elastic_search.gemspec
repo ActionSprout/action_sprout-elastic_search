@@ -31,6 +31,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", "> 0"
   spec.add_dependency "action_sprout-method_object", "> 0"
   spec.add_dependency "elasticsearch", "> 0"
+  spec.add_dependency "addressable", "~> 2.6"
+  spec.add_dependency "net-http-persistent", "~> 4.0"
+
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

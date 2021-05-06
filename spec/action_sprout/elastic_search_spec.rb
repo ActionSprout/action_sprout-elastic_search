@@ -6,6 +6,6 @@ RSpec.describe ActionSprout::ElasticSearch do
   end
 
   it "does something useful" do
-    expect(false).to eq(true)
+    expect(ActionSprout::ElasticSearch.client).to_not be_nil
   end
 end

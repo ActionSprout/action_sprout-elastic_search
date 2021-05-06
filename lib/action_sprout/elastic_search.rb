@@ -14,7 +14,7 @@ module ActionSprout
       if defined?(Rails)
         Rails.env
       else
-        ENV["RACK_ENV"]
+        ENV["APP_ENV"]
       end
     end
 

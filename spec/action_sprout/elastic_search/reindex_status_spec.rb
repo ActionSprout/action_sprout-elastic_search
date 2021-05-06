@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
-require 'action_sprout/elastic_search/reindex_status'
+require "action_sprout/elastic_search/reindex_status"
 
 RSpec.describe ActionSprout::ElasticSearch::ReindexStatus do
-
-  let(:json_response) { %q[ {
+  let(:json_response) {
+    %q( {
     "nodes": {
       "x9zbuTSOR3u4PIhPTERVig": {
         "name": "x9zbuTS",
@@ -34,18 +34,21 @@ RSpec.describe ActionSprout::ElasticSearch::ReindexStatus do
         }
       }
     }
-  } ] }
+  } )
+  }
 
   let(:client_stub) { double(tasks: double(list: JSON.parse(json_response))) }
 
   let(:now) { Time.zone.parse("2020-04-06T19:35:00Z") }
 
-  let(:expected_output_lines) { [
-    "to [stories_production]         4.76 Million of    31 Million (15.4%) -- 25 minutes and 4.0 seconds elapsed\n",
-    "Estimated  2 hours, 18 minutes, and 15.0 seconds left of  2 hours, 43 minutes, and 20.0 seconds total\n\n",
-    "to [inspire_production]         6.31 Million of  30.3 Million (20.8%) -- 26 minutes and 12.0 seconds elapsed\n",
-    "Estimated   1 hour, 39 minutes, and 44.0 seconds left of   2 hours, 5 minutes, and 56.0 seconds total\n\n",
-  ] }
+  let(:expected_output_lines) {
+    [
+      "to [stories_production]         4.76 Million of    31 Million (15.4%) -- 25 minutes and 4.0 seconds elapsed\n",
+      "Estimated  2 hours, 18 minutes, and 15.0 seconds left of  2 hours, 43 minutes, and 20.0 seconds total\n\n",
+      "to [inspire_production]         6.31 Million of  30.3 Million (20.8%) -- 26 minutes and 12.0 seconds elapsed\n",
+      "Estimated   1 hour, 39 minutes, and 44.0 seconds left of   2 hours, 5 minutes, and 56.0 seconds total\n\n"
+    ]
+  }
 
   it "prints the expected output" do
     expected_output = expected_output_lines.join
@@ -53,4 +56,3 @@ RSpec.describe ActionSprout::ElasticSearch::ReindexStatus do
     expect { ElasticSearch::ReindexStatus.call client: client_stub, now: now }.to output(expected_output).to_stdout
   end
 end
-

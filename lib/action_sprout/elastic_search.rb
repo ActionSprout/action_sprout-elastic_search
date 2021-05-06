@@ -14,7 +14,7 @@ module ActionSprout
       if defined?(Rails)
         Rails.env
       else
-        ENV['RACK_ENV']
+        ENV["RACK_ENV"]
       end
     end
 
@@ -59,13 +59,11 @@ module ActionSprout
       if defined?(Rails)
         Rails.logger
       else
-        require 'logger'
+        require "logger"
         Logger.new(STDOUT)
       end
     end
 
     initialize_clients
-
   end
-
 end

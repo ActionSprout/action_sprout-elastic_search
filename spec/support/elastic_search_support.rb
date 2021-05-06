@@ -1,7 +1,7 @@
-require 'action_sprout/elastic_search'
-require 'action_sprout/elastic_search/load_index_options'
-require 'action_sprout/elastic_search/setup_indices'
-require 'action_sprout/elastic_search/delete_indices'
+require "action_sprout/elastic_search"
+require "action_sprout/elastic_search/load_index_options"
+require "action_sprout/elastic_search/setup_indices"
+require "action_sprout/elastic_search/delete_indices"
 
 module ElasticSearchSupport
   extend ActiveSupport::Concern
@@ -21,7 +21,7 @@ module ElasticSearchSupport
         config_path = Pathname.new("spec/indices")
         index_options = ActionSprout::ElasticSearch::LoadIndexOptions.call(config_path: config_path)[index] || {}
         ActionSprout::ElasticSearch::DeleteIndices.call indices: [index]
-        ActionSprout::ElasticSearch::SetupIndices.call indices: { index => index_options }
+        ActionSprout::ElasticSearch::SetupIndices.call indices: {index => index_options}
       end
 
       after(:all) do
@@ -35,4 +35,3 @@ end
 RSpec.configure do |config|
   config.include ElasticSearchSupport
 end
-

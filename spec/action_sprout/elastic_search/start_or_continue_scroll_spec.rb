@@ -1,25 +1,25 @@
-require 'spec_helper'
+require "spec_helper"
 
-require 'action_sprout/elastic_search/start_or_continue_scroll'
-require 'action_sprout/elastic_search/index_records'
+require "action_sprout/elastic_search/start_or_continue_scroll"
+require "action_sprout/elastic_search/index_records"
 
-RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, '.call' do
-  setup_index 'examples'
+RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, ".call" do
+  setup_index "examples"
 
-  let(:index) { double index_name: 'examples_test', index_type: 'example' }
-  let(:cache_key) { 'example_scroll_test' }
+  let(:index) { double index_name: "examples_test", index_type: "example" }
+  let(:cache_key) { "example_scroll_test" }
   let(:cache_service) { ActiveSupport::Cache::MemoryStore.new }
 
   class Thing
     kwattr :id,
-      index_name: 'examples_test',
-      index_type: 'example',
+      index_name: "examples_test",
+      index_type: "example",
       join_field: nil,
       parent_id: nil,
       action: :create
 
     def source_data
-      { num: id }
+      {num: id}
     end
   end
 
@@ -28,7 +28,7 @@ RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, '.call' do
     records = 1.upto(10).map { |i| Thing.new id: i }
     ActionSprout::ElasticSearch::IndexRecords.call records: records
 
-    refresh_index 'examples'
+    refresh_index "examples"
   end
 
   before do
@@ -44,43 +44,45 @@ RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, '.call' do
     end
   end
 
-  let(:query) { {
-    sort: ['num:asc'],
-    body: {
-      query: {
-        range: { num: { lt: 6 } },
-      },
-    },
-  } }
+  let(:query) {
+    {
+      sort: ["num:asc"],
+      body: {
+        query: {
+          range: {num: {lt: 6}}
+        }
+      }
+    }
+  }
 
-  it 'can start a search' do
+  it "can start a search" do
     results = described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
 
-    expect(results.map { |doc| doc['_source']['num'] }).to eq [1, 2]
+    expect(results.map { |doc| doc["_source"]["num"] }).to eq [1, 2]
   end
 
-  it 'stores the scroll id' do
+  it "stores the scroll id" do
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
 
     expect(cache_service.read(cache_key)).to be
   end
 
-  it 'can continue a search' do
+  it "can continue a search" do
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
     results = described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
 
-    expect(results.map { |doc| doc['_source']['num'] }).to eq [3, 4]
+    expect(results.map { |doc| doc["_source"]["num"] }).to eq [3, 4]
   end
 
-  it 'can continue a search again' do
+  it "can continue a search again" do
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
     results = described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
 
-    expect(results.map { |doc| doc['_source']['num'] }).to eq [5]
+    expect(results.map { |doc| doc["_source"]["num"] }).to eq [5]
   end
 
-  it 'the last time it returns an empty array' do
+  it "the last time it returns an empty array" do
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
@@ -89,7 +91,7 @@ RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, '.call' do
     expect(results).to be_empty
   end
 
-  it 'the last time clears the scroll id as well' do
+  it "the last time clears the scroll id as well" do
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
     described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
@@ -98,7 +100,7 @@ RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, '.call' do
     expect(cache_service.read(cache_key)).to be_nil
   end
 
-  context 'when the scroll has expired' do
+  context "when the scroll has expired" do
     let(:original_scroll_id) { cache_service.read cache_key }
 
     before do
@@ -106,19 +108,16 @@ RSpec.describe ActionSprout::ElasticSearch::StartOrContinueScroll, '.call' do
       ActionSprout::ElasticSearch.client.clear_scroll scroll_id: original_scroll_id
     end
 
-    it 'starts a new scroll' do
+    it "starts a new scroll" do
       described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
 
       expect(cache_service.read(cache_key)).to_not eq(original_scroll_id)
     end
 
-    it 'returns the first result set again' do
+    it "returns the first result set again" do
       results = described_class.call index: index, query: query, batch_size: 2, cache_key: cache_key, cache_service: cache_service
 
-      expect(results.map { |doc| doc['_source']['num'] }).to eq [1, 2]
+      expect(results.map { |doc| doc["_source"]["num"] }).to eq [1, 2]
     end
   end
-
 end
-
-

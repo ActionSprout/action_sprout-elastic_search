@@ -1,7 +1,6 @@
 module ActionSprout
   module ElasticSearch
     class LoadIndexOptions
-
       def self.default_config_path
         if defined?(Rails)
           Rails.root.join("config/indices")

@@ -1,3 +1,5 @@
+require "action_sprout/elastic_search/indexing_error"
+
 # Given an array of `records`, create one bulk update in elasticsearch.
 #
 # Currently this only supports update (as upsert), but could easily support
@@ -15,8 +17,8 @@
 module ActionSprout
   module ElasticSearch
     class IndexRecords
-    extend ActionSprout::MethodObject
-    method_object :records, client: ElasticSearch.client
+      extend ActionSprout::MethodObject
+      method_object :records, client: ElasticSearch.client
 
       def call
         return if records.empty?

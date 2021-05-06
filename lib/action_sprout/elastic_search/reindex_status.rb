@@ -1,4 +1,3 @@
-
 module ActionSprout
   module ElasticSearch
     class ReindexStatus

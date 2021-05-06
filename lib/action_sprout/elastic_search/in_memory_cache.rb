@@ -22,7 +22,7 @@ module ActionSprout
       end
 
       def clear
-        @cache = Hash.new
+        @cache = {}
       end
     end
   end
